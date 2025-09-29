@@ -1,0 +1,62 @@
+# HolySMP.net Robots.txt
+# https://holysmp.net/robots.txt
+
+User-agent: *
+Allow: /
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: DiscordBot
+Allow: /
+
+# Disallow admin/private areas if any
+# User-agent: *
+# Disallow: /admin/
+# Disallow: /private/
+# Disallow: /temp/
+
+# Allow important files
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /.well-known/
+
+# Specify sitemap location
+Sitemap: https://holysmp.net/sitemap.xml
+
+# Crawl delay (optional, remove if not needed)
+# Crawl-delay: 1
+
+# Cache directive
+# Cache-Control: public, max-age=3600
