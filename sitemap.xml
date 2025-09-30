@@ -20,6 +20,14 @@
         <priority>0.8</priority>
     </url>
 
+    <!-- Discord Server -->
+    <url>
+        <loc>https://holysmp.net/discord</loc>
+        <lastmod>2025-09-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
     <!-- Datenschutzerklärung -->
     <url>
         <loc>https://holysmp.net/privacy</loc>
