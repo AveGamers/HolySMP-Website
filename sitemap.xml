@@ -7,7 +7,7 @@
     <!-- Hauptseite -->
     <url>
         <loc>https://holysmp.net/</loc>
-        <lastmod>2025-09-29</lastmod>
+        <lastmod>2025-09-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
@@ -15,7 +15,7 @@
     <!-- Server Regeln -->
     <url>
         <loc>https://holysmp.net/rules</loc>
-        <lastmod>2025-09-29</lastmod>
+        <lastmod>2025-09-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -23,7 +23,15 @@
     <!-- Datenschutzerklärung -->
     <url>
         <loc>https://holysmp.net/privacy</loc>
-        <lastmod>2025-09-29</lastmod>
+        <lastmod>2025-09-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- Impressum -->
+    <url>
+        <loc>https://holysmp.net/impressum</loc>
+        <lastmod>2025-09-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
@@ -31,7 +39,7 @@
     <!-- Allgemeine Geschäftsbedingungen -->
     <url>
         <loc>https://holysmp.net/terms</loc>
-        <lastmod>2025-09-29</lastmod>
+        <lastmod>2025-09-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
