@@ -6,8 +6,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initDiscordWidget();
     initCurrentYear();
     initPlayerCounter();
-    initCopyServerIP();
+    initServerStatus();
     initSmoothScrolling();
+    
+    // Global functions setup
+    window.copyServerIP = copyServerIP;
 });
 
 // Mobile Navigation Menu
@@ -112,43 +115,170 @@ function initCurrentYear() {
     }
 }
 
-// Enhanced Player Counter
+// Enhanced Player Counter using AveGamers API
 function initPlayerCounter() {
-    // The mc-player-counter library is already loaded in HTML
-    // Let's add some enhancements
-    const playerCountElements = document.querySelectorAll('[data-playercounter-ip]');
+    const playerCountElement = document.getElementById('player-count');
     
-    playerCountElements.forEach(element => {
-        // Add loading state
-        element.classList.add('loading-players');
-        
-        // Monitor for changes (the library updates the element)
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'childList' || mutation.type === 'characterData') {
-                    element.classList.remove('loading-players');
-                    
-                    // Add number formatting
-                    const count = parseInt(element.textContent);
-                    if (!isNaN(count)) {
-                        element.textContent = count.toLocaleString('de-DE');
-                        
-                        // Add visual effect for high player count
-                        if (count > 50) {
-                            element.style.color = 'var(--accent-color)';
-                            element.style.fontWeight = 'bold';
-                        }
-                    }
-                }
+    if (!playerCountElement) return;
+    
+    // Set loading state
+    playerCountElement.textContent = '...';
+    playerCountElement.classList.add('loading-players');
+    
+    // Function to fetch server status
+    async function fetchServerStatus() {
+        try {
+            // Create timeout controller
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            
+            // First try Java Edition
+            const javaResponse = await fetch('https://mcapi.avegamers.net/api/server/status?host=play.holysmp.net&port=25565&type=java', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                signal: controller.signal
             });
-        });
+            
+            clearTimeout(timeoutId);
+            
+            if (javaResponse.ok) {
+                const javaData = await javaResponse.json();
+                if (javaData.success && javaData.data && javaData.data.online) {
+                    updatePlayerCount(javaData.data.players?.online || 0, 'Java');
+                    return;
+                }
+            }
+            
+            // If Java fails, try Bedrock Edition
+            const controller2 = new AbortController();
+            const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
+            
+            const bedrockResponse = await fetch('https://mcapi.avegamers.net/api/server/status?host=play.holysmp.net&port=19132&type=bedrock', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                signal: controller2.signal
+            });
+            
+            clearTimeout(timeoutId2);
+            
+            if (bedrockResponse.ok) {
+                const bedrockData = await bedrockResponse.json();
+                if (bedrockData.success && bedrockData.data && bedrockData.data.online) {
+                    updatePlayerCount(bedrockData.data.players?.online || 0, 'Bedrock');
+                    return;
+                }
+            }
+            
+            // If both fail, show offline status
+            updatePlayerCount(0, 'Offline');
+            
+        } catch (error) {
+            console.warn('Player count fetch failed:', error);
+            // Try to show some server info even if player count fails
+            updatePlayerCount('?', 'Error');
+        }
+    }
+    
+    // Function to update the display
+    function updatePlayerCount(count, source) {
+        playerCountElement.classList.remove('loading-players');
         
-        observer.observe(element, {
-            childList: true,
-            subtree: true,
-            characterData: true
-        });
+        if (count === '?' || count === 'Error') {
+            playerCountElement.textContent = '?';
+            playerCountElement.style.color = 'var(--text-muted)';
+            playerCountElement.title = 'Spieleranzahl konnte nicht geladen werden';
+            return;
+        }
+        
+        if (count === 0 && source === 'Offline') {
+            playerCountElement.textContent = '0';
+            playerCountElement.style.color = 'var(--text-muted)';
+            playerCountElement.title = 'Server ist offline';
+            return;
+        }
+        
+        // Format number for German locale
+        const formattedCount = typeof count === 'number' ? count.toLocaleString('de-DE') : count;
+        playerCountElement.textContent = formattedCount;
+        playerCountElement.title = `${formattedCount} Spieler online (${source})`;
+        
+        // Color coding based on player count
+        if (count > 50) {
+            playerCountElement.style.color = 'var(--accent-color)';
+            playerCountElement.style.fontWeight = 'bold';
+        } else if (count > 0) {
+            playerCountElement.style.color = 'var(--primary-color)';
+            playerCountElement.style.fontWeight = 'normal';
+        } else {
+            playerCountElement.style.color = 'var(--text-secondary)';
+            playerCountElement.style.fontWeight = 'normal';
+        }
+        
+        // Add subtle animation on update
+        playerCountElement.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            playerCountElement.style.transform = 'scale(1)';
+        }, 200);
+    }
+    
+    // Initial fetch
+    fetchServerStatus();
+    
+    // Update every 30 seconds
+    setInterval(fetchServerStatus, 30000);
+    
+    // Update when page becomes visible again
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            fetchServerStatus();
+        }
     });
+}
+
+// Server Status Check (for additional info)
+function initServerStatus() {
+    // Optional: Add server status indicators
+    async function checkServerHealth() {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            
+            const response = await fetch('https://mcapi.avegamers.net/api/server/ping?host=play.holysmp.net&port=25565&type=java', {
+                method: 'GET',
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (response.ok) {
+                const data = await response.json();
+                updateServerStatusIndicator(data.online);
+            } else {
+                updateServerStatusIndicator(false);
+            }
+        } catch (error) {
+            console.warn('Server health check failed:', error);
+            updateServerStatusIndicator(false);
+        }
+    }
+    
+    function updateServerStatusIndicator(isOnline) {
+        // Add status indicator to navigation or elsewhere if needed
+        const statusElements = document.querySelectorAll('.server-status-indicator');
+        statusElements.forEach(element => {
+            element.classList.toggle('online', isOnline);
+            element.classList.toggle('offline', !isOnline);
+            element.title = isOnline ? 'Server ist online' : 'Server ist offline';
+        });
+    }
+    
+    // Check immediately and then every minute
+    checkServerHealth();
+    setInterval(checkServerHealth, 60000);
 }
 
 // Copy Server IP to Clipboard
@@ -297,8 +427,6 @@ document.head.appendChild(style);
 
 // Global functions (can be called from HTML)
 window.copyServerIP = copyServerIP;
-
-// Performance optimization
 if ('requestIdleCallback' in window) {
     requestIdleCallback(function() {
         // Non-critical initialization
@@ -343,7 +471,8 @@ function preloadImages() {
     });
 }
 
-// Service Worker registration for PWA (optional)
+// Service Worker registration for PWA (optional) - Disabled until sw.js is created
+/*
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js').then(function(registration) {
@@ -353,6 +482,7 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+*/
 
 // Error handling
 window.addEventListener('error', function(e) {
