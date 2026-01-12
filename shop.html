@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- CSS -->
+    <link rel="stylesheet" href="./assets/style/main.css">
+    <link rel="stylesheet" href="./assets/style/shop.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HolySMP Shop - Unterstütze unseren Server und erhalte exklusive Vorteile!">
+    <meta name="keywords" content="Minecraft, Server, HolySMP, Shop, Store, Ränge, Items">
+    <meta name="author" content="HolySMP Team">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://holysmp.net/shop">
+    <meta property="og:title" content="HolySMP Shop - Server unterstützen">
+    <meta property="og:description" content="Unterstütze unseren Server und erhalte exklusive Vorteile!">
+    <meta property="og:image" content="./assets/images/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://holysmp.net/shop">
+    <meta property="twitter:title" content="HolySMP Shop - Server unterstützen">
+    <meta property="twitter:description" content="Unterstütze unseren Server und erhalte exklusive Vorteile!">
+    <meta property="twitter:image" content="./assets/images/logo.png">
+
+    <title>Shop - HolySMP | Minecraft Multiplayer Server</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/webp" href="./assets/icons/favicon.webp">
+    <link rel="apple-touch-icon" href="./assets/icons/favicon.webp">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WZYGT177B2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-WZYGT177B2');
+    </script>
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="/" class="nav-logo">
+                    <img src="./assets/images/logo.png" alt="HolySMP Logo" class="logo-img">
+                    <span class="logo-text">HolySMP</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/rules" class="nav-link">Regeln</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="https://wiki.holysmp.net" class="nav-link" target="_blank">Wiki</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/shop" class="nav-link active">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/discord" class="nav-link">Discord</a>
+                    </li>
+                </ul>
+                
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Shop Hero Section -->
+    <section class="shop-hero">
+        <div class="hero-background" style="background-image: url('./assets/images/hero/hero-1.png'); background-size: cover; background-position: center;">
+            <div class="hero-overlay"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="container">
+                <h1 class="hero-title">HolySMP Shop</h1>
+                <p class="hero-subtitle">Unterstütze unseren Server und erhalte exklusive Vorteile!</p>
+                
+                <div class="hero-notice">
+                    <div class="notice-icon">ℹ️</div>
+                    <div class="notice-text">
+                        <strong>Kein Pay2Win:</strong> Alle Käufe dienen nur zur Unterstützung des Servers. Wir verkaufen keine unfairen Vorteile!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tebex Embed Shop -->
+    <section class="shop-loading" id="shop-loading">
+        <div class="container">
+            <div class="loading-spinner"></div>
+            <p>Shop wird geladen...</p>
+        </div>
+    </section>
+
+    <!-- Shop Error State -->
+    <section class="shop-error" id="shop-error" style="display: none;">
+        <div class="container">
+            <div class="error-icon">⚠️</div>
+            <h2>Shop konnte nicht geladen werden</h2>
+            <p>Bitte versuche es später erneut oder kontaktiere uns im Discord.</p>
+            <a href="/discord" class="btn btn-primary">Zum Discord</a>
+        </div>
+    </section>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkout-modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeCheckoutModal()"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>🛒 Zur Kasse gehen</h3>
+                <button class="modal-close" onclick="closeCheckoutModal()">✕</button>
+            </div>
+            
+            <!-- Progress Steps -->
+            <div class="checkout-steps">
+                <div class="checkout-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Minecraft Name</div>
+                </div>
+                <div class="checkout-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Abschluss</div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <!-- Step 1: Minecraft Username -->
+                <div class="checkout-step-content" id="checkout-step-1">
+                    <div class="step-icon">🎮</div>
+                    <h4>Minecraft Username</h4>
+                    <p>Bitte gib deinen Minecraft Username ein. Wir unterstützen sowohl Java als auch Bedrock Edition:</p>
+                    
+                    <div class="username-field">
+                        <label for="minecraft-username">Minecraft Username</label>
+                        <input type="text" id="minecraft-username" class="input-field" placeholder="DeinName oder .DeinName" maxlength="17" autocomplete="off">
+                        <div class="input-hint" style="margin-top: 0.75rem;">
+                            <span>💡</span>
+                            <span><strong>Java Edition:</strong> DeinName | <strong>Bedrock Edition:</strong> .DeinName (mit Punkt am Anfang)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-hint" style="margin-top: 1rem;">
+                        <span>⚠️</span>
+                        <span>Achte auf korrekte Schreibweise! Groß-/Kleinschreibung ist wichtig.</span>
+                    </div>
+                    <div class="cart-summary">
+                        <h5>Deine Bestellung:</h5>
+                        <div id="checkout-cart-items"></div>
+                        <div class="cart-summary-total">
+                            <span>Gesamt:</span>
+                            <span id="checkout-total">0,00 EUR</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Summary -->
+                <div class="checkout-step-content" id="checkout-step-2" style="display: none;">
+                    <div class="step-icon">✓</div>
+                    <h4>Bestellung abschließen</h4>
+                    <div class="checkout-summary">
+                        <div class="summary-section">
+                            <h5>📦 Deine Bestellung</h5>
+                            <div id="final-cart-items"></div>
+                            <div class="summary-total">
+                                <span>Gesamtpreis:</span>
+                                <span id="final-total" class="total-price">0,00 EUR</span>
+                            </div>
+                        </div>
+                        <div class="summary-section">
+                            <h5>👤 Deine Daten</h5>
+                            <div class="summary-info">
+                                <div class="info-row">
+                                    <span class="info-label">Minecraft Name:</span>
+                                    <span class="info-value" id="summary-username">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout-notice">
+                            <div class="notice-icon">ℹ️</div>
+                            <div>
+                                <strong>Was passiert als Nächstes?</strong>
+                                <p>Du wirst zu unserem sicheren Zahlungsanbieter Tebex weitergeleitet. Nach erfolgreicher Zahlung werden die Vorteile automatisch aktiviert.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCheckoutModal()">Abbrechen</button>
+                <div class="checkout-actions">
+                    <button class="btn btn-secondary" id="checkout-back" onclick="checkoutPrevStep()" style="display: none;">Zurück</button>
+                    <button class="btn btn-primary" id="checkout-next" onclick="checkoutNextStep()">Weiter</button>
+                    <button class="btn btn-secondary" id="checkout-skip" onclick="checkoutSkipStep()" style="display: none;">Überspringen</button>
+                    <button class="btn btn-success btn-large" id="checkout-finish" onclick="finishCheckout()" style="display: none;">
+                        <span>🛒 Jetzt kaufen</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart -->
+    <div class="cart-button" id="cart-button" style="display: none;">
+        <button class="btn btn-cart" onclick="toggleCart()">
+            🛒 Warenkorb (<span id="cart-count">0</span>)
+        </button>
+    </div>
+
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Warenkorb</h3>
+            <button class="cart-close" onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <div class="cart-empty">
+                <p>Dein Warenkorb ist leer</p>
+            </div>
+        </div>
+        <div class="cart-footer" id="cart-footer" style="display: none;">
+            <div class="cart-total">
+                <span>Gesamt:</span>
+                <span class="cart-total-price" id="cart-total-price">0,00 €</span>
+            </div>
+            <button class="btn btn-primary btn-checkout" onclick="proceedToCheckout()">
+                Zur Kasse
+            </button>
+        </div>
+    </div>
+
+    <!-- Shop Products -->
+    <section class="shop-products" id="shop-products" style="display: none;">
+        <div class="container">
+            <div class="shop-layout">
+                <!-- Main Products Area -->
+                <div class="products-area">
+                    <div class="products-grid" id="products-list">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Success Animation Overlay -->
+    <div class="success-overlay" id="success-overlay" style="display: none;">
+        <div class="success-animation">
+            <div class="success-checkmark">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            <h2>Kauf erfolgreich! 🎉</h2>
+            <p>Deine Vorteile werden in Kürze aktiviert.</p>
+            <p class="success-subtitle">Vielen Dank für deine Unterstützung!</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>HolySMP</h3>
+                    <p>Ein einzigartiges Minecraft Multiplayer Erlebnis mit Java & Bedrock Crossplay.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Navigation</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/rules">Regeln</a></li>
+                        <li><a href="/shop">Shop</a></li>
+                        <li><a href="/discord">Discord</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Rechtliches</h3>
+                    <ul class="footer-links">
+                        <li><a href="/impressum">Impressum</a></li>
+                        <li><a href="/privacy">Datenschutz</a></li>
+                        <li><a href="/terms">AGB</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Server</h3>
+                    <p><strong>play.holysmp.net</strong></p>
+                    <p class="footer-text-sm">Java & Bedrock Crossplay</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span id="current-year"></span> HolySMP. Alle Rechte vorbehalten.</p>
+                <p class="footer-text-sm">Nicht offiziell mit Mojang verbunden.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./assets/script/main.js"></script>
+    <script src="./assets/script/shop.js"></script>
+</body>
+</html>
